@@ -1,0 +1,2 @@
+# DeliverEat
+Django project
