@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %} DeliverEat {% endblock %}
+
+{% block content %}
+
+
+<div class="row container">
+    {% for restaurant in restaurants_list %}
+      <div class="col-sm-6 p-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ restaurant.name }}</h5>
+            <p class="card-text">Type: {{ restaurant.restaurant_type }}</p>
+            <a href="{% url 'restaurant_detail' restaurant.id %}" class="btn btn-primary">See menu</a>
+          </div>
+          <div class="card-footer text-muted">
+              Opening hours: {{  restaurant.open_hour }} - {{ restaurant.close_hour }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}
