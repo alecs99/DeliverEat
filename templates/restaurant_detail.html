@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  {{ restaurant.name }}
+{% endblock%}
+
+{% block content %}
+<div class="container">
+  <div class="p-3">
+    <div class="card">
+      <div class="card-body">
+        <h1 class="card-title">
+          {{ restaurant.name }}
+        </h1>
+        <p class="card-text">
+          {{  restaurant.description}}
+        </p>
+      </div>
+      <div class="card-footer text-muted">
+        Opening Hours: {{  restaurant.open_hour }} - {{ restaurant.close_hour }}
+      </div>
+    </div>
+  </div>
+
+
+  <div class=" col-sm-12">
+    <h2>Menu:</h2>
+
+      {% for product in products %}
+        <div class="card m-3">
+          <div class="card-body">
+            <blockquote class="blockquote mb-0" style="position: relative">
+              <h3>{{ product.name }}</h3>
+                <ul style="list-style: none">
+                    <li>{{ product.description }}</li>
+                    <li>{{ product.price }} RON</li>
+                    {% if product.photo %}
+                            <img style="position: absolute; top: 2%; left: 80%" src="{{ product.photo.url }}" width="150px">
+                    {% endif %}
+                    <li><input style="margin-top:20px;" class="btn btn-primary" type="submit" value="Add to Cart" /></li>
+                </ul>
+            </blockquote>
+          </div>
+        </div>
+      {% endfor %}
+  </div>
+</div>
+{% endblock %}
