@@ -4,14 +4,16 @@ from django.db import models
 
 User = get_user_model()
 
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     address = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=10)
     birthday = models.DateField(blank=True, null=True)
 
+
 class Restaurant(models.Model):
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=50)
     restaurant_type = models.CharField(max_length=10)
     description = models.CharField(max_length=100)
     open_hour = models.TimeField()
@@ -19,6 +21,7 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Product(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="product_restaurant")
@@ -29,6 +32,7 @@ class Product(models.Model):
 
     def __str__(self):
         return "{} belongs to {} restaurant and has the price of {} ron".format(self.name, self.restaurant.name, self.price)
+
 
 class Order(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="restaurant")
