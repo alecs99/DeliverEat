@@ -15,7 +15,24 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from delivereatproj.views import (
+    index,
+    RegisterView,
+    LoginView,
+    LogoutView,
+    UserProfileView,
+    UserProfileUpdateView,
+    RestaurantDetail)
 
 urlpatterns = [
+    path('', index, name='restaurants_list'),
     path('admin/', admin.site.urls),
-]
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('userprofile', UserProfileView.as_view(), name='user_profile'),
+    path('userprofile/<int:pk>/edit', UserProfileUpdateView.as_view(), name='user_profile_edit'),
+    path('restaurant/<int:pk>', RestaurantDetail.as_view(), name='restaurant_detail'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
