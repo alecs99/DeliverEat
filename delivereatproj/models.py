@@ -22,7 +22,7 @@ class Restaurant(models.Model):
 
 class Product(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="product_restaurant")
-    name = models.CharField(max_length=10)
+    name = models.CharField(max_length=20)
     description = models.CharField(max_length=100)
     photo = models.FileField(upload_to='products/', blank=True, null=True)
     price = models.PositiveIntegerField(default=1)
