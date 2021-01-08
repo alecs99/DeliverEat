@@ -26,8 +26,8 @@ from delivereatproj.views import (
     UserProfileUpdateView,
     RestaurantDetail,
     CartDetail,
-    AddProduct,
-    ProductDeleteView
+    ProductDeleteView,
+    ProductAddView
 )
 
 urlpatterns = [
@@ -40,6 +40,6 @@ urlpatterns = [
     path('userprofile/<int:pk>/edit', UserProfileUpdateView.as_view(), name='user_profile_edit'),
     path('restaurant/<int:pk>', RestaurantDetail.as_view(), name='restaurant_detail'),
     path('cart/<int:pk>', CartDetail.as_view(), name='cart_detail'),
+    path('add/<int:pk_product>', ProductAddView.as_view(), name='add_to_cart'),
     path('delete/<int:pk_product>', ProductDeleteView.as_view(), name='delete_product'),
-    path('restaurant/<int:pk>/add/<int:pk_product>', AddProduct.as_view(), name='add_to_cart')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
