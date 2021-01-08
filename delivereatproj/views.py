@@ -23,13 +23,15 @@ class CartDetail(LoginRequiredMixin, DetailView):
         context = super(CartDetail, self).get_context_data(**kwargs)
         return context
 
-class AddProduct(LoginRequiredMixin, UpdateView):
-    model = Cart
-    fields = []
 
-    def form_valid(self, form):
+class ProductAddView(LoginRequiredMixin, View):
+    def get(self, request, **kwargs):
         cart = Cart.objects.get(pk=self.request.user.id)
         product = Product.objects.get(pk=self.kwargs['pk_product'])
+        if cart.products.count() is not 0:
+            for cart_product in cart.products.all():
+                if product.restaurant.id is not cart_product.restaurant.id:
+                    return redirect(reverse_lazy("cart_detail", kwargs={"pk": self.request.user.id}))
         cart.total_price = cart.total_price + product.price
         cart.products.add(product)
         cart.save()

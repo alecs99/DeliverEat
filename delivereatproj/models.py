@@ -45,6 +45,7 @@ class Order(models.Model):
     def __str__(self):
         return "{} did the order at the {} restaurant on {}".format(self.customer.name, self.restaurant.name, self.order_date)
 
+
 class Cart(models.Model):
     products = models.ManyToManyField(Product)
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart_customer")

@@ -36,10 +36,7 @@
                         <div>{{ product.description }}</div>
                         <div>{{ product.price }} RON</div>
                         <div>
-                            <form action="{% url 'add_to_cart' restaurant.id product.id %}" method="post" class="form-inline justify-content-center">
-                                {% csrf_token %}
-                                <input style="margin-top:20px;" class="btn btn-primary" type="submit" value="Add to Cart" />
-                            </form>
+                            <a style="margin-top:20px;" class="btn btn-primary" href="{% url 'add_to_cart' product.id %}">Add to cart</a>
                         </div>
                     </div>
                     {% if product.photo %}
