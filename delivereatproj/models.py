@@ -40,8 +40,13 @@ class Order(models.Model):
     products = models.ManyToManyField(Product)
     order_date = models.DateTimeField()
     payment_method = models.CharField(max_length=10)
-    total_price = models.PositiveIntegerField(default=1)
+    total_price = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return "{} did the order at the {} restaurant on {}".format(self.customer.name, self.restaurant.name, self.order_date)
+
+class Cart(models.Model):
+    products = models.ManyToManyField(Product)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart_customer")
+    total_price = models.PositiveIntegerField(default=0)
 

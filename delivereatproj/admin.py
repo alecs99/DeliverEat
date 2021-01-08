@@ -14,5 +14,6 @@ admin.site.register(models.UserProfile, UserProfileAdmin)
 admin.site.register(models.Restaurant, RestaurantAdmin)
 admin.site.register(models.Product)
 admin.site.register(models.Order)
+admin.site.register(models.Cart)
 
 
