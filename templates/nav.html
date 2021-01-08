@@ -1,0 +1,35 @@
+<ul class="nav container" style="display: flex; justify-content: space-between;">
+    <div class="nav-links" style="display: flex">
+        <li class="nav-item">
+           <a class="nav-link active" href="{% url 'restaurants_list' %}">DeliverEat</a>
+         </li>
+    </div>
+
+
+  {% if user.is_authenticated %}
+      <div class="user-info" style="display: flex">
+         <li class="nav-item">
+          <a class="nav-link active" href="{% url 'user_profile'%}">Hello, {{ user.username }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'cart_detail' user.id %}">Cart</a>
+        </li>
+        {% if user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'admin:index' %}">Admin</a>
+          </li>
+        {% endif %}
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'logout' %}">Logout</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'login' %}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'register' %}">Register</a>
+        </li>
+      </div>
+
+  {% endif %}
+</ul>

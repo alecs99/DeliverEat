@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class=" col-sm-12">
+        <h3 style="padding-left: 4px">Cart:</h3>
+
+          {% for product in cart.products.all %}
+            <div class="card m-3">
+              <div class="card-body">
+                <div class="" style="position: relative">
+                  <h4>{{ product.name }}</h4>
+                    <div style="display: flex;justify-content: space-between">
+                        <div>
+                            <div>{{ product.description }}</div>
+                            <div>{{ product.price }} RON</div>
+                            <a style="margin-top:20px;" class="btn btn-primary" href="{% url 'delete_product' product.id %}">Delete product</a>
+                        </div>
+                        {% if product.photo %}
+                                <img src="{{ product.photo.url }}" width="150px">
+                        {% endif %}
+                    </div>
+                </div>
+              </div>
+            </div>
+            {% empty %}
+              <h2>Your cart is empty add a product from one of the restaurants</h2>
+          {% endfor %}
+          <h2>Products price: {{ cart.total_price }}</h2>
+      </div>
+{% endblock %}
