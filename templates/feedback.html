@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}
+  Feedback
+{% endblock%}
+
+{% block content %}
+    <div class="container">
+        <div>Stars: {{ feedback.stars }}</div>
+        <div>Details: {{ feedback.details }}</div>
+    </div>
+{% endblock %}

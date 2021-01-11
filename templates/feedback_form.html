@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}
+  Feedback Form
+{% endblock%}
+
+{% block content %}
+    <div class="container">
+    <h2>Feedback Form</h2>
+    <form method="post" class="justify-content-center col-6" enctype='multipart/form-data'>
+      {% csrf_token %}
+
+        {% if form.errors %}
+          <div class="alert alert-danger" role="alert">
+            {{ form.errors }}
+          </div>
+        {% endif %}
+
+      <div class="form-group mx-2">
+          <input type="hidden" name="order" class="form-control"
+                 value="{{ order }}" id="id_order">
+       </div>
+
+       <div class="form-group mx-2">
+          <label for="id_stars">Stars:</label>
+          <input type="text" name="stars" class="form-control"
+                 value="{{ form.stars.initial }}" id="id_stars">
+       </div>
+
+      <div class="form-group mx-2">
+          <label for="id_details">Details:</label>
+          <textarea rows="4" cols="50" class="form-control" type="text-area"
+          name="details" required="" id="id_details" maxlength="100" value="{{ form.details.initial }}"></textarea>
+       </div>
+
+      <div>
+          <input style="margin-top:20px;" class="btn btn-secondary" type="submit" value="Create feedback" />
+      </div>
+      </form>
+    </div>
+
+
+{% endblock %}

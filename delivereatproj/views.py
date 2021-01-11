@@ -4,10 +4,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView, CreateView, DetailView, UpdateView, DeleteView
+from django.views.generic import TemplateView, CreateView, DetailView, UpdateView, DeleteView, ListView
 
-from delivereatproj.models import UserProfile, User, Restaurant, Product, Cart
-from delivereatproj.forms import UserProfileForm
+from delivereatproj.models import UserProfile, User, Restaurant, Product, Cart, Order, Feedback
+from delivereatproj.forms import UserProfileForm, CheckoutForm, FeedBackForm
+
+from datetime import datetime
 
 
 def index(request):
@@ -56,6 +58,7 @@ class RestaurantDetail(LoginRequiredMixin, DetailView):
         context = super(RestaurantDetail, self).get_context_data(**kwargs)
         current_restaurant = context['restaurant']
         context['products'] = Product.objects.filter(restaurant=current_restaurant)
+        context['cart'] = Cart.objects.get(pk=self.request.user.id)
         return context
 
 
@@ -140,3 +143,80 @@ class LogoutView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect(reverse_lazy(index))
+
+
+class OrderView(LoginRequiredMixin, DetailView):
+    template_name = "order.html"
+    model = Order
+
+    def get_context_data(self, **kwargs):
+        return super(OrderView, self).get_context_data(**kwargs)
+
+
+class Checkout(LoginRequiredMixin, CreateView):
+    model = Order
+    form_class = CheckoutForm
+    template_name = "checkout.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(Checkout, self).get_context_data(**kwargs)
+        user = self.request.user
+        context['form'].fields['first_name'].initial = user.first_name
+        context['form'].fields['last_name'].initial = user.last_name
+        context['form'].fields['e_mail'].initial = user.email
+        context['form'].fields['phone_number'].initial = user.profile.phone_number
+        context['form'].fields['address'].initial = user.profile.address
+
+        return context
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        cart = Cart.objects.get(pk=self.request.user.id)
+
+        order = Order.objects.create(restaurant=cart.products.all()[0].restaurant, customer=self.request.user,
+                                     order_date=datetime.today(), total_price=cart.total_price)
+        order.customer.phone_number = data['phone_number']
+        order.customer.address = data['address']
+        order.customer.first_name = data['first_name']
+        order.customer.last_name = data['last_name']
+        order.customer.email = data['e_mail']
+        # order.payment_method = data['payment']
+        order.products.add(*cart.products.all())
+
+        order.save()
+        cart.products.clear()
+        cart.total_price = 0
+        cart.save()
+
+        return redirect(reverse_lazy("order", kwargs={"pk": order.id}))
+
+
+class OrdersListView(LoginRequiredMixin, ListView):
+    template_name = "orders.html"
+    model = Order
+
+    def get_context_data(self, **kwargs):
+        context = super(OrdersListView, self).get_context_data(**kwargs)
+        context['orders'] = Order.objects.all().filter(customer=User.objects.get(id=self.request.user.id))
+        return context
+
+
+class FeedbackView(LoginRequiredMixin, CreateView):
+    template_name = 'feedback_form.html'
+    model = Feedback
+    form_class = FeedBackForm
+
+    def get_context_data(self, **kwargs):
+        context = super(FeedbackView, self).get_context_data(**kwargs)
+        context['order'] = self.kwargs['pk']
+        return context
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        order = Order.objects.get(id=data['order'])
+
+        feedback = Feedback.objects.create(restaurant=order.restaurant, customer=order.customer,
+                                           stars=data['stars'], details=data['details'], order=order)
+        feedback.save()
+
+        return redirect(reverse_lazy('restaurant_detail', kwargs={'pk': order.restaurant.id}))

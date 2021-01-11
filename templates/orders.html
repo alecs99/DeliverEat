@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}
+  Orders
+{% endblock%}
+
+{% block content %}
+    <div class="container">
+    <h2>Orders</h2>
+    <ol class="">
+        {% for order in orders %}
+            <li class="card p-3" style="margin-bottom: 24px">
+                <div class="card-body">
+                     <div>Order id #{{ order.id }}</div>
+                    <div>Ordered from <a href="{% url 'restaurant_detail' order.restaurant.id %}" >{{ order.restaurant }}</a></div>
+                    <div>Total price: {{ order.total_price }}</div>
+                    <div class="btn-block" style="margin-top: 12px">
+                        <a href="{% url 'order' order.id %}" class="btn btn-primary">Details</a>
+                        <a href="{% url 'feedback_form' order.id %}" class="btn btn-secondary">Feedback</a>
+                    </div>
+
+                </div>
+            </li>
+        {% endfor %}
+    </ol>
+    </div>
+{% endblock %}
