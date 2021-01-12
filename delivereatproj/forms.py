@@ -23,7 +23,7 @@ class CheckoutForm(forms.ModelForm):
 
     class Meta:
         model = models.Order
-        exclude = ['restaurant', 'customer', 'products', 'order_date', 'total_price', 'payment_method']
+        exclude = ['restaurant', 'customer', 'products', 'order_date', 'total_price']
 
 
 class FeedBackForm(forms.ModelForm):

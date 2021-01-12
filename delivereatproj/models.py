@@ -36,7 +36,7 @@ class Product(models.Model):
 
 class Order(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="restaurant")
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="customer")
+    customer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="customer")
     products = models.ManyToManyField(Product)
     order_date = models.DateTimeField()
     payment_method = models.CharField(max_length=10)

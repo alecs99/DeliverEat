@@ -18,6 +18,7 @@ def index(request):
 
 
 class CartDetail(LoginRequiredMixin, DetailView):
+    login_url = '/login/'
     template_name = 'view_cart.html'
     model = Cart
 
@@ -27,6 +28,8 @@ class CartDetail(LoginRequiredMixin, DetailView):
 
 
 class ProductAddView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def get(self, request, **kwargs):
         cart = Cart.objects.get(pk=self.request.user.id)
         product = Product.objects.get(pk=self.kwargs['pk_product'])
@@ -41,6 +44,8 @@ class ProductAddView(LoginRequiredMixin, View):
 
 
 class ProductDeleteView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def get(self, request, **kwargs):
         cart = Cart.objects.get(pk=self.request.user.id)
         product = Product.objects.get(pk=self.kwargs['pk_product'])
@@ -50,7 +55,7 @@ class ProductDeleteView(LoginRequiredMixin, View):
         return redirect(reverse_lazy("cart_detail", kwargs={"pk": self.request.user.id}))
 
 
-class RestaurantDetail(LoginRequiredMixin, DetailView):
+class RestaurantDetail(DetailView):
     template_name = 'restaurant_detail.html'
     model = Restaurant
 
@@ -58,13 +63,15 @@ class RestaurantDetail(LoginRequiredMixin, DetailView):
         context = super(RestaurantDetail, self).get_context_data(**kwargs)
         current_restaurant = context['restaurant']
         context['products'] = Product.objects.filter(restaurant=current_restaurant)
-        context['cart'] = Cart.objects.get(pk=self.request.user.id)
+        if self.request.user.id:
+            context['cart'] = Cart.objects.get(pk=self.request.user.id)
         return context
 
 
 class UserProfileView(LoginRequiredMixin, DetailView):
     template_name = 'user_profile.html'
     context_object_name = 'selected_user'
+    login_url = '/login/'
 
     def get_object(self, **kwargs):
         selected_user = User.objects.get(id=self.request.user.id)
@@ -75,6 +82,7 @@ class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = UserProfile
     form_class = UserProfileForm
     template_name = 'user_profile_update.html'
+    login_url = '/login/'
 
     def get_context_data(self, **kwargs):
         context = super(UserProfileUpdateView, self).get_context_data(**kwargs)
@@ -139,6 +147,7 @@ class LoginView(TemplateView):
 
 
 class LogoutView(LoginRequiredMixin, View):
+    login_url = '/login/'
 
     def get(self, request, *args, **kwargs):
         logout(request)
@@ -146,6 +155,7 @@ class LogoutView(LoginRequiredMixin, View):
 
 
 class OrderView(LoginRequiredMixin, DetailView):
+    login_url = '/login/'
     template_name = "order.html"
     model = Order
 
@@ -154,6 +164,7 @@ class OrderView(LoginRequiredMixin, DetailView):
 
 
 class Checkout(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
     model = Order
     form_class = CheckoutForm
     template_name = "checkout.html"
@@ -172,15 +183,16 @@ class Checkout(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         data = form.cleaned_data
         cart = Cart.objects.get(pk=self.request.user.id)
+        profile = UserProfile.objects.get(pk=self.request.user.id)
 
-        order = Order.objects.create(restaurant=cart.products.all()[0].restaurant, customer=self.request.user,
+        order = Order.objects.create(restaurant=cart.products.all()[0].restaurant, customer=profile,
                                      order_date=datetime.today(), total_price=cart.total_price)
         order.customer.phone_number = data['phone_number']
         order.customer.address = data['address']
         order.customer.first_name = data['first_name']
         order.customer.last_name = data['last_name']
         order.customer.email = data['e_mail']
-        # order.payment_method = data['payment']
+        order.payment_method = data['payment_method']
         order.products.add(*cart.products.all())
 
         order.save()
@@ -192,16 +204,18 @@ class Checkout(LoginRequiredMixin, CreateView):
 
 
 class OrdersListView(LoginRequiredMixin, ListView):
+    login_url = '/login/'
     template_name = "orders.html"
     model = Order
 
     def get_context_data(self, **kwargs):
         context = super(OrdersListView, self).get_context_data(**kwargs)
-        context['orders'] = Order.objects.all().filter(customer=User.objects.get(id=self.request.user.id))
+        context['orders'] = Order.objects.all().filter(customer=UserProfile.objects.get(id=self.request.user.id))
         return context
 
 
 class FeedbackView(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
     template_name = 'feedback_form.html'
     model = Feedback
     form_class = FeedBackForm
@@ -215,7 +229,7 @@ class FeedbackView(LoginRequiredMixin, CreateView):
         data = form.cleaned_data
         order = Order.objects.get(id=data['order'])
 
-        feedback = Feedback.objects.create(restaurant=order.restaurant, customer=order.customer,
+        feedback = Feedback.objects.create(restaurant=order.restaurant, customer=order.customer.user,
                                            stars=data['stars'], details=data['details'], order=order)
         feedback.save()
 
