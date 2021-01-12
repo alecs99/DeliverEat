@@ -2,7 +2,7 @@
 
 
 {% block content %}
-    <div class=" col-sm-12">
+    <div class="container">
         <h3 style="padding-left: 4px">Cart:</h3>
 
           {% for product in cart.products.all %}
@@ -14,7 +14,7 @@
                         <div>
                             <div>{{ product.description }}</div>
                             <div>{{ product.price }} RON</div>
-                            <a style="margin-top:20px;" class="btn btn-primary" href="{% url 'delete_product' product.id %}">Delete product</a>
+                            <a style="margin-top:20px;" class="btn btn-secondary" href="{% url 'delete_product' product.id %}">Delete product</a>
                         </div>
                         {% if product.photo %}
                                 <img src="{{ product.photo.url }}" width="150px">
@@ -26,6 +26,10 @@
             {% empty %}
               <h2>Your cart is empty add a product from one of the restaurants</h2>
           {% endfor %}
-          <h2>Products price: {{ cart.total_price }}</h2>
+            <div style="display: flex;justify-content: space-between">
+                <h2>Products price: {{ cart.total_price }}</h2>
+                 <a class="btn btn-primary" href="{% url "checkout" %}">Go to checkout</a>
+            </div>
       </div>
+
 {% endblock %}
