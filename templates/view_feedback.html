@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+  Feedback
+{% endblock%}
+{% block content %}
+    <div class="container justify-content-center">
+        <h2>Feedback for order #{{ selected_feedback.order.id }}</h2>
+        <div>Stars: {{ selected_feedback.stars }}</div>
+        <div>Details: {{ selected_feedback.details }}</div>
+    </div>
+
+{% endblock %}

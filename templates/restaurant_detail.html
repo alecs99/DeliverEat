@@ -52,6 +52,13 @@
         </div>
       {% endfor %}
   </div>
+
+    {% if rating %}
+        <div>Restaurant's rating, based on customers feedback: {{ rating }}</div>
+    {% else %}
+        <div>This restaurant has no rating.</div>
+    {% endif %}
+
 </div>
 {% endblock %}
 
