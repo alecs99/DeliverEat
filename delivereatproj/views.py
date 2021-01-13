@@ -65,6 +65,17 @@ class RestaurantDetail(DetailView):
         context['products'] = Product.objects.filter(restaurant=current_restaurant)
         if self.request.user.id:
             context['cart'] = Cart.objects.get(pk=self.request.user.id)
+
+        context['cart'] = Cart.objects.get(pk=self.request.user.id)
+        feedback_list = Feedback.objects.filter(restaurant=current_restaurant)
+        context['feedback_list'] = feedback_list
+
+        context['rating'] = 0
+        if len(feedback_list):
+            rating = 0
+            for feedback in feedback_list:
+                rating += feedback.stars
+            context['rating'] = rating / len(feedback_list)
         return context
 
 
@@ -163,14 +174,14 @@ class OrderView(LoginRequiredMixin, DetailView):
         return super(OrderView, self).get_context_data(**kwargs)
 
 
-class Checkout(LoginRequiredMixin, CreateView):
+class CheckoutView(LoginRequiredMixin, CreateView):
     login_url = '/login/'
     model = Order
     form_class = CheckoutForm
     template_name = "checkout.html"
 
     def get_context_data(self, **kwargs):
-        context = super(Checkout, self).get_context_data(**kwargs)
+        context = super(CheckoutView, self).get_context_data(**kwargs)
         user = self.request.user
         context['form'].fields['first_name'].initial = user.first_name
         context['form'].fields['last_name'].initial = user.last_name
@@ -211,6 +222,13 @@ class OrdersListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(OrdersListView, self).get_context_data(**kwargs)
         context['orders'] = Order.objects.all().filter(customer=UserProfile.objects.get(id=self.request.user.id))
+        orders = Order.objects.all().filter(customer=UserProfile.objects.get(id=self.request.user.id))
+        feedback_list = Feedback.objects.all().filter(customer=User.objects.get(id=self.request.user.id))
+        context['orders'] = orders
+        orders_with_feedback = []
+        [orders_with_feedback.append(feedback.order.id) for feedback in feedback_list]
+        context['orders_with_feedback'] = orders_with_feedback
+
         return context
 
 
