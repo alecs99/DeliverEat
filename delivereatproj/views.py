@@ -76,7 +76,9 @@ class RestaurantDetail(DetailView):
             for feedback in feedback_list:
                 rating += feedback.stars
             context['rating'] = rating / len(feedback_list)
+
         return context
+
 
 
 class UserProfileView(LoginRequiredMixin, DetailView):
@@ -175,7 +177,6 @@ class OrderView(LoginRequiredMixin, DetailView):
 
 
 class CheckoutView(LoginRequiredMixin, CreateView):
-    login_url = '/login/'
     model = Order
     form_class = CheckoutForm
     template_name = "checkout.html"
@@ -231,6 +232,20 @@ class OrdersListView(LoginRequiredMixin, ListView):
 
         return context
 
+class OrdersListView(LoginRequiredMixin, ListView):
+    template_name = "orders.html"
+    model = Order
+
+    def get_context_data(self, **kwargs):
+        context = super(OrdersListView, self).get_context_data(**kwargs)
+        orders = Order.objects.all().filter(customer=UserProfile.objects.get(id=self.request.user.id))
+        feedback_list = Feedback.objects.all().filter(customer=User.objects.get(id=self.request.user.id))
+        context['orders'] = orders
+        orders_with_feedback = []
+        [orders_with_feedback.append(feedback.order.id) for feedback in feedback_list]
+        context['orders_with_feedback'] = orders_with_feedback
+
+        return context
 
 class FeedbackView(LoginRequiredMixin, CreateView):
     login_url = '/login/'
