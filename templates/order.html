@@ -20,11 +20,11 @@
             </div>
           {% endfor %}
           <div>Products price: {{ order.total_price }}</div>
-            <ul class="list-group m-4">
-                <li class="list-group-item"><b>Fullname:</b> {{ order.customer.first_name }} {{ order.customer.last_name }}</li>
-                <li class="list-group-item"><b>E-mail:</b> {{ order.customer.email }}</li>
-                <li class="list-group-item"><b>Phone</b>: {{ order.customer.phone_number }}</li>
-                <li class="list-group-item"><b>Address:</b> {{ order.customer.profile.address}}</li>
+              <ul class="list-group m-4">
+                <li class="list-group-item"><b>Fullname:</b> {{ user.first_name }} {{ user.last_name }}</li>
+                <li class="list-group-item"><b>E-mail:</b> {{ user.email }}</li>
+                <li class="list-group-item"><b>Phone</b>: {{ user.profile.phone_number }}</li>
+                <li class="list-group-item"><b>Address:</b> {{ user.profile.address}}</li>
                 <li class="list-group-item"><b>Payment method:</b> {{ order.payment_method}}</li>
                 <li class="list-group-item"><b>Restaurant:</b> {{ order.restaurant }}</li>
              </ul>

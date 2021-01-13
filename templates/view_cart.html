@@ -28,7 +28,9 @@
           {% endfor %}
             <div style="display: flex;justify-content: space-between">
                 <h2>Products price: {{ cart.total_price }}</h2>
-                 <a class="btn btn-primary" href="{% url "checkout" %}">Go to checkout</a>
+                 {% if cart.products.all.count %}
+                    <a class="btn btn-primary" href="{% url "checkout" %}">Go to checkout</a>
+                {% endif %}
             </div>
       </div>
 
