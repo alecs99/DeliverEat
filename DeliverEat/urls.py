@@ -28,7 +28,6 @@ from delivereatproj.views import (
     CartDetail,
     ProductDeleteView,
     ProductAddView,
-    OrderView, CheckoutView, OrdersListView, FeedbackView)
     OrderView, CheckoutView, OrdersListView, FeedbackView, FeedbackDetailsView)
 
 urlpatterns = [
