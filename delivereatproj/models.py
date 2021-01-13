@@ -36,14 +36,14 @@ class Product(models.Model):
 
 class Order(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name="restaurant")
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="customer")
+    customer = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="customer")
     products = models.ManyToManyField(Product)
     order_date = models.DateTimeField()
     payment_method = models.CharField(max_length=10)
     total_price = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return "{} did the order at the {} restaurant on {}".format(self.customer.name, self.restaurant.name, self.order_date)
+        return "Did the order at the {} restaurant on {}".format(self.restaurant.name, self.order_date)
 
 
 class Cart(models.Model):
@@ -51,3 +51,10 @@ class Cart(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart_customer")
     total_price = models.PositiveIntegerField(default=0)
 
+
+class Feedback(models.Model):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, related_name='restaurant_feedback')
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customer_feedback')
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_feedback')
+    stars = models.PositiveIntegerField(default=1)
+    details = models.CharField(max_length=20)

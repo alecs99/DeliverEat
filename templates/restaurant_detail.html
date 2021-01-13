@@ -36,7 +36,11 @@
                         <div>{{ product.description }}</div>
                         <div>{{ product.price }} RON</div>
                         <div>
-                            <a style="margin-top:20px;" class="btn btn-primary" href="{% url 'add_to_cart' product.id %}">Add to cart</a>
+                            {% if product in cart.products.all %}
+                                <a style="margin-top:20px;" class="btn btn-primary" href="{% url 'cart_detail' cart.id %}">Already in cart</a>
+                            {% else %}
+                                <a style="margin-top:20px;" class="btn btn-primary" href="{% url 'add_to_cart' product.id %}">Add to cart</a>
+                            {% endif %}
                         </div>
                     </div>
                     {% if product.photo %}
@@ -48,6 +52,13 @@
         </div>
       {% endfor %}
   </div>
+
+    {% if rating %}
+        <div class="p-3">Restaurant's rating, based on customers feedback: {{ rating }}</div>
+    {% else %}
+        <div class="p-3">This restaurant has no rating.</div>
+    {% endif %}
+
 </div>
 {% endblock %}
 

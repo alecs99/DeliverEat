@@ -27,8 +27,8 @@ from delivereatproj.views import (
     RestaurantDetail,
     CartDetail,
     ProductDeleteView,
-    ProductAddView
-)
+    ProductAddView,
+    OrderView, CheckoutView, OrdersListView, FeedbackView, FeedbackDetailsView)
 
 urlpatterns = [
     path('', index, name='restaurants_list'),
@@ -42,4 +42,10 @@ urlpatterns = [
     path('cart/<int:pk>', CartDetail.as_view(), name='cart_detail'),
     path('add/<int:pk_product>', ProductAddView.as_view(), name='add_to_cart'),
     path('delete/<int:pk_product>', ProductDeleteView.as_view(), name='delete_product'),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path('checkout', CheckoutView.as_view(), name="checkout"),
+    path('order/<int:pk>', OrderView.as_view(), name='order'),
+    path('orders/', OrdersListView.as_view(), name='orders'),
+    path('order/<int:pk>/feedback', FeedbackView.as_view(), name='feedback'),
+    path('order/<int:pk>/feedback_form', FeedbackView.as_view(), name='feedback_form'),
+    path('order/<int:pk_order>/view_feedback', FeedbackDetailsView.as_view(), name='view_feedback'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}
+  Checkout
+{% endblock%}
+
+{% block content %}
+    <div class="container">
+        <h2>Checkout</h2>
+        <form method="post" class="justify-content-center col-6" enctype='multipart/form-data'>
+          {% csrf_token %}
+
+            {% if form.errors %}
+              <div class="alert alert-danger" role="alert">
+                {{ form.errors }}
+              </div>
+            {% endif %}
+
+            <div class="form-group mx-2">
+              <label for="id_first_name">First name:</label>
+              <input type="text" class="form-control" name="first_name"
+                     value="{{ form.first_name.initial }}" required="" id="id_first_name"
+                     maxlength="100">
+            </div>
+
+            <div class="form-group mx-2">
+              <label for="id_last_name">Last name:</label>
+              <input type="text" class="form-control" name="last_name"
+                     required="" id="id_last_name" maxlength="100"
+                     value="{{ form.last_name.initial }}">
+            </div>
+
+            <div class="form-group mx-2">
+              <label for="id_e_mail">E-mail:</label>
+              <input type="text"  class="form-control" name="e_mail"
+                     required="" id="id_e_mail" maxlength="100"
+                     value="{{ form.e_mail.initial }}">
+            </div>
+
+            <div class="form-group mx-2">
+              <label for="id_phone_number">Phone Number:</label>
+              <input type="text"  class="form-control" name="phone_number"
+                     required="" id="id_phone_number" maxlength="10"
+                     value="{{ form.phone_number.initial }}">
+            </div>
+
+            <div class="form-group mx-2">
+              <label for="id_address">Address:</label>
+              <input type="text"  class="form-control" name="address"
+                     required="" id="id_address" maxlength="50"
+                     value="{{ form.address.initial }}">
+            </div>
+
+          <div class="form-group mx-2">
+              <label for="id_payment">Payment method:</label>
+              <select name="payment_method" id="id_payment" class="form-control">
+                    <option selected="selected" disabled class="form-control">Select one</option>
+                    <option value="Card">Card</option>
+                    <option value="Cash">Cash</option>
+              </select>
+           </div>
+
+            <input style="margin-top:20px;" class="btn btn-secondary" type="submit" value="Place order" />
+        </form>
+    </div>
+
+  {% endblock %}
+
+
