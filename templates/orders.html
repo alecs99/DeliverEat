@@ -15,11 +15,20 @@
                     <div>Total price: {{ order.total_price }}</div>
                     <div class="btn-block" style="margin-top: 12px">
                         <a href="{% url 'order' order.id %}" class="btn btn-primary">Details</a>
-                        <a href="{% url 'feedback_form' order.id %}" class="btn btn-secondary">Feedback</a>
-                    </div>
+                        {% if order.id in orders_with_feedback %}
+                           <a href="{% url 'view_feedback' order.id %}" class="btn btn-secondary">See Feedback</a>
+                        {% else %}
+                            <a href="{% url 'feedback_form' order.id %}" class="btn btn-secondary">Give Feedback</a>
+                        {% endif %}
 
+                    </div>
                 </div>
             </li>
+        {% endfor %}
+
+        {% for feedback in feedback_list %}
+            <li>{{ feedback.order.id }}</li>
+
         {% endfor %}
     </ol>
     </div>
